@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34309.116
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RunnerApp", "RunnerApp\RunnerApp.csproj", "{4306E784-51BB-4417-9D37-33BF77B93373}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4306E784-51BB-4417-9D37-33BF77B93373}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4306E784-51BB-4417-9D37-33BF77B93373}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4306E784-51BB-4417-9D37-33BF77B93373}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4306E784-51BB-4417-9D37-33BF77B93373}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BF5823C5-7494-4CD7-A064-39B6D481B4D5}
+	EndGlobalSection
+EndGlobal
