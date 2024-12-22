@@ -6,18 +6,21 @@
 
         public GameProcess()
         {
-
+            // пока пустой конструктор
         }
 
+        // запуск игры
         public void Run()
         {
             while (window2D.IsOpen == true)
             {
-
-                // Обработка очереди событий
+                // обработка очереди событий
                 window2D.DispatchEvents();
 
-                // Показываем кадр всего что подготовлено
+                // рисуем карту
+                window2D.DrawMap();
+
+                // gоказываем кадр всего что подготовлено
                 window2D.Display();
             }
         }

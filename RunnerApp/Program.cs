@@ -1,7 +1,4 @@
-﻿using SFML.Graphics;
-using SFML.Window;
-
-namespace RunnerApp
+﻿namespace RunnerApp
 {
     internal class Program
     {
