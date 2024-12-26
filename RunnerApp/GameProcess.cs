@@ -4,11 +4,6 @@
     {
         private readonly Window window2D = new Window();
 
-        public GameProcess()
-        {
-            Map.RandomLampsGenerate();
-        }
-
         // запуск игры
         public void Run()
         {
