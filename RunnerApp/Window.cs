@@ -6,7 +6,6 @@ namespace RunnerApp
 {
     public class Window : RenderWindow
     {
-
         private readonly Image mapImage; // объект изображения для карты
         private readonly Texture mapTexture; // текстура карты
         private readonly Sprite mapSprite; // спрайт
@@ -19,6 +18,8 @@ namespace RunnerApp
 
             // ограничение частоты фреймов для стабилизации скорости рендеринга
             base.SetFramerateLimit(80);
+            
+            Map.RandomLampsGenerate();
 
             Closed += Window_Closed;
         }
@@ -40,7 +41,6 @@ namespace RunnerApp
                 }
         }
 
-        // зыкрываем окно
         private void Window_Closed(object sender, EventArgs e)
         {
             base.Close();
