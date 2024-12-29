@@ -34,11 +34,14 @@ namespace RunnerApp
                 window2D.DrawMap();
 
                 // рисуем спрайт игрока
-                window2D.Draw(player.sprite);
+                player.Animation(time);
+                window2D.Draw(player.sprite);   
                 player.Update(time);
-
+              
                 // показываем кадр всего, что готово
                 window2D.Display();
+
+               
             }
         }
     }
