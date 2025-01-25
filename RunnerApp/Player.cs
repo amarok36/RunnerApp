@@ -164,6 +164,15 @@ namespace RunnerApp
 
             if (dx < 0) sprite.TextureRect = new IntRect(0, 0, 32, 32);
             if (dx > 0) sprite.TextureRect = new IntRect(0, 32, 32, 32);
+
+            DisplayСoordinates();
+        }
+
+        private void DisplayСoordinates()
+        {
+            Console.SetCursorPosition(0, 0);
+            Console.Write($"Player coordinates \nX: {x:f2}, Y: {y:f2}");
+            Console.CursorVisible = false;
         }
     }
 }
