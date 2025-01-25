@@ -4,49 +4,48 @@ using System.Text;
 
 namespace RunnerApp
 {
-    // класс игрока
     public class Player : Entity
     {
-        enum state { left, right, up, down, jump, stay }; // состояние игрока
-        state status;
-        int playerScore;
+        enum State { left, right, up, down, stay };
+        State state;
+        int score;
         double currentFrame;
+        bool stairs;
 
-        public Player(Image image, float x, float y) : base(image, x, y)
+        public Player(Image image, double x, double y) : base(image, x, y)
         {
-            playerScore = 0;
-            status = state.stay;
             sprite.TextureRect = new IntRect(0, 0, width, height);
+            state = State.stay;
             currentFrame = 0;
+            stairs = false;
+            score = 0;
         }
 
-        // управление игроком
-        public void Control()
+        private void Control()
         {
             if (Keyboard.IsKeyPressed(Keyboard.Key.Left))
             {
-                status = state.left;
-                speed = 0.1f;
+                state = State.left;
+                speed = 0.13;
             }
             if (Keyboard.IsKeyPressed(Keyboard.Key.Right))
             {
-                status = state.right;
-                speed = 0.1f;
+                state = State.right;
+                speed = 0.13;
+            }
+            if (Keyboard.IsKeyPressed(Keyboard.Key.Up) && !onGround)
+            {
+                state = State.up;
+                speed = 0.1;
             }
             if (Keyboard.IsKeyPressed(Keyboard.Key.Down))
             {
-                status = state.down;
-            }
-            if (Keyboard.IsKeyPressed(Keyboard.Key.Space) && onGround) // если нажата клавиша пробел и мы на земле, то прыгаем
-            {
-                status = state.jump;
-                dy = -0.4f;
-                onGround = false; // состояние равно прыжок - прыгнули и сообщили, что мы не на земле
+                state = State.down;
+                speed = 0.1;
             }
         }
 
-        // анимация игрока
-        public void Animation(float time)
+        public void Animate(double time)
         {
             if (Keyboard.IsKeyPressed(Keyboard.Key.Left))
             {
@@ -60,7 +59,7 @@ namespace RunnerApp
                 if (currentFrame > 3) currentFrame -= 3;
                 sprite.TextureRect = new IntRect(32 * (int)currentFrame, 32, 32, 32);
             }
-            if ((Keyboard.IsKeyPressed(Keyboard.Key.Up) || Keyboard.IsKeyPressed(Keyboard.Key.Down)) && onGround == false)
+            if ((Keyboard.IsKeyPressed(Keyboard.Key.Up) || Keyboard.IsKeyPressed(Keyboard.Key.Down)) && !onGround)
             {
                 currentFrame += 0.01 * time;
                 if (currentFrame > 2) currentFrame -= 2;
@@ -68,74 +67,100 @@ namespace RunnerApp
             }
         }
 
-        // проверка столкновений с картой
-        public void CheckCollisionWithMap(double Dx, double Dy)
+        private void CheckCollisionWithMap(double dX, double dY)
         {
-            bool stairs = false;
+            if (dY < 0)
+                for (int i = (int)y / 32; i < (y + height) / 32; i++)
+                    for (int j = (int)(x + 10) / 32; j < (x + 5) / 32; j++)
+                        if (Map.baseMap[i][j] == 'b')
+                        { y = i * 32 + 32; dy = 0; }
 
-            for (int i = (int)y / 32; i < (y + height) / 32; i++) // проходимся по тайликам, контактирующим с игроком
-               
-                for (int j = (int)x / 32; j < (x + width) / 32; j++) // X делим на 32, тем самым получаем левый квадратик, с которым персонаж соприкасается
+
+            if (dY > 0)
+                for (int i = (int)y / 32; i < (y + height) / 32; i++)
+                    for (int j = (int)(x + 10) / 32; j < (x + 20) / 32; j++)
+                        if (Map.baseMap[i][j] == 'b')
+                        { y = i * 32 - 32; dy = 0; onGround = true; }
+
+
+            if (dX < 0)
+                for (int i = (int)y / 32; i < (y + height) / 32; i++)
+                    for (int j = (int)x / 32; j < x / 32; j++)
+                        if (Map.baseMap[i][j] == 'b')
+                        { x = j * 32 + 32; }
+
+
+            if (dX > 0)
+                for (int i = (int)y / 32; i < (y + height) / 32; i++)
+                    for (int j = (int)(x + 32) / 32; j < (x + 32) / 32; j++)
+                        if (Map.baseMap[i][j] == 'b')
+                        { x = j * 32 - 32; }
+
+
+            for (int i = (int)y / 32; i < (y + height) / 32; i++)
+                for (int j = (int)x / 32; j < (x + 17) / 32; j++)
                 {
-                    if (Map.baseMap[i][j] == 'b') // если элемент - тайлик кирпича
+                    if (Map.baseMap[i][j] == 's')
                     {
-                        if ((Dy > 0) && (stairs == false)) { y = i * 32 - height; dy = 0; onGround = true; } // по Y вниз => идем в пол (стоим на месте) или падаем
-                        if ((Dy < 0) && (stairs == false)) { y = i * 32 + 32; dy = 0; } // столкновение с верхними краями карты
-                        if (Dx > 0) x = j * 32 - width; // с правым краем карты
-                        if (Dx < 0) x = j * 32 + 32; // с левым краем карты
+                        stairs = true;
+                        onGround = false;
                     }
-                    if (Map.baseMap[i][j] == 'l') // если элемент - тайлик лампы
+                    else
                     {
-                        StringBuilder sb = new StringBuilder(Map.baseMap[i]); // заменяем на пустой тайлик
+                        stairs = false;
+                        onGround = true;
+                    }
+
+                    if (Map.baseMap[i][j] == ' ' && Map.baseMap[i + 1][j] == 's'
+                        && (state == State.left || state == State.right))
+                        dy = 0;
+                }
+        }
+
+        private void CheckCollisionWithLamps(double dX, double dY)
+        {
+            for (int i = (int)y / 32; i < (y + height) / 32; i++)
+                for (int j = (int)(x + 20) / 32; j < (x + 10) / 32; j++)
+                    if (Map.baseMap[i][j] == 'l')
+                    {
+                        StringBuilder sb = new StringBuilder(Map.baseMap[i]);
                         sb[j] = ' ';
                         string str = sb.ToString();
                         Map.baseMap[i] = str;
 
-                        playerScore += 20;
+                        score += 20;
                     }
-                    if ((Map.baseMap[i][j] == 's') && Keyboard.IsKeyPressed(Keyboard.Key.Up))
-                    {
-                        stairs = true;
-                        dy = -0.1f;
-                        status = state.up;
-                        onGround = false;
-                    }
-                    if ((Map.baseMap[i][j] == 's') && Keyboard.IsKeyPressed(Keyboard.Key.Down))
-                    {
-                        stairs = true;
-                        dy = 0.1f;
-                        status = state.down;
-                        onGround = false;
-                    }
-                }
         }
 
-        // оживление объекта класса
-        public void Update(float time)
+        public void Update(double time)
         {
             Control();
 
-            switch (status) // поведение в зависимости от направления 
+            switch (state)
             {
-                case state.right: dx = speed; break; // состояние идти вправо
-                case state.left: dx = -speed; break;  // состояние идти влево
-                case state.up: dx = 0; dy = 0; break; // состояние подняться вверх (например по лестнице)
-                case state.down: dx = 0; break; // состояние во время спуска персонажа
-                case state.jump: break;
-                case state.stay: break;
+                case State.stay: dx = 0; break;
+                case State.right: dx = speed; break;
+                case State.left: dx = -speed; break;
+                case State.up: dy = -speed; dx = 0; break;
+                case State.down: dy = speed; dx = 0; break;
             }
-            x += dx * time; // ускорение * время - получаем смещение координат по Х и, как следствие, движение
-            CheckCollisionWithMap(dx, 0); // обрабатываем столкновение по Х
 
-            y += dy * time; // аналогично по Y
-            CheckCollisionWithMap(0, dy); // обрабатываем столкновение по Y
+            x += dx * time;
+            CheckCollisionWithMap(dx, 0);
+            CheckCollisionWithLamps(dx, 0);
 
-            sprite.Position = new(x + width / 3, y + height / 2); // задаем позицию спрайта в его центре, выводим бесконечно, иначе бы наш спрайт стоял на месте
+            y += dy * time;
+            CheckCollisionWithMap(0, dy);
+            CheckCollisionWithLamps(0, dy);
 
-            if (health <= 0) life = false; // если число жизней меньше или равно 0, то игрок умирает
+            sprite.Position = new((float)x + width / 2, (float)y + height / 2);
+
+            if (health <= 0) life = false;
             if (!isMove) speed = 0;
 
-            dy = dy + 0.0015f * time; // постоянно притягиваемся к земле
+            if (onGround) dy = dy + 0.0015 * time; // gravity
+
+            if (stairs) sprite.TextureRect = new IntRect(0, 64, 32, 32);
 
             if (dx < 0) sprite.TextureRect = new IntRect(0, 0, 32, 32);
             if (dx > 0) sprite.TextureRect = new IntRect(0, 32, 32, 32);
