@@ -3,27 +3,31 @@ using SFML.System;
 
 namespace RunnerApp
 {
-    // базовый класс
+    // base class
     public class Entity
     {
-        public float x, y, dx, dy, speed; // координаты, ускорение (по x и y), скорость
-        public int width, hight;
-        public int health; // хранит жизни
-        public bool life; // логическая жизнь
-        public bool isMove, onGround; // на земле
+        public double x, y;
+        public double dx, dy;
+        public double speed;
+
+        public int width, height;
+        public int health;
+
+        public bool life;
+        public bool isMove, onGround;
 
         public Texture texture;
         public Sprite sprite;
 
         public Color backgroundColor = new Color(3, 0, 32);
 
-        public Entity(Image image, float x, float y)
+        public Entity(Image image, double x, double y)
         {
             this.x = x;
             this.y = y;
 
             width = 32;
-            hight = 32;
+            height = 32;
 
             dx = 0;
             dy = 0;
@@ -31,12 +35,12 @@ namespace RunnerApp
 
             life = true;
             isMove = false;
-            onGround = false;
+            onGround = true;
 
-            image.CreateMaskFromColor(backgroundColor); // делаем фон спрайта прозрачным
+            image.CreateMaskFromColor(backgroundColor); // transparent sprite background
             texture = new Texture(image);
             sprite = new Sprite(texture);
-            sprite.Origin = new Vector2f(width / 2, hight / 2); // основная точка, с которой рисуем спрайт - в середине
+            sprite.Origin = new Vector2f(width / 2, height / 2);
         }
     }
 }
