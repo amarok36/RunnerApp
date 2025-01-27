@@ -7,18 +7,20 @@ namespace RunnerApp
     public class Player : Entity
     {
         enum State { left, right, up, down, stay };
-        State state;
-        int score;
+        State state;  
         double currentFrame;
+        public int score;
         bool stairs;
-
+       
         public Player(Image image, double x, double y) : base(image, x, y)
         {
             sprite.TextureRect = new IntRect(0, 0, width, height);
             state = State.stay;
             currentFrame = 0;
-            stairs = false;
+            health = 100;
             score = 0;
+            stairs = false;
+  
         }
 
         private void Control()
