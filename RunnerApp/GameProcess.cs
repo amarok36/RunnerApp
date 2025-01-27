@@ -26,7 +26,10 @@ namespace RunnerApp
 
                 window2D.DispatchEvents();
 
+                window2D.Clear();
+
                 window2D.DrawMap();
+                window2D.DrawText(player.score, player.health);
 
                 player.Animate(time);
                 window2D.Draw(player.sprite);

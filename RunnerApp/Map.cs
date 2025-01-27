@@ -4,7 +4,7 @@ using System.Text;
 
 namespace RunnerApp
 {
-    public class Map : Sprite
+    public class Map
     {
         public const int MapHeight = 22;
         public const int MapWidth = 43;
