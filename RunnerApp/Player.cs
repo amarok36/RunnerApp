@@ -1,4 +1,6 @@
-﻿using SFML.Graphics;
+﻿using RunnerApp.Properties;
+using SFML.Audio;
+using SFML.Graphics;
 using SFML.Window;
 using System.Text;
 
@@ -11,7 +13,9 @@ namespace RunnerApp
         double currentFrame;
         public int score;
         bool stairs;
-       
+
+        Sound sound = new Sound();
+        
         public Player(Image image, double x, double y) : base(image, x, y)
         {
             sprite.TextureRect = new IntRect(0, 0, width, height);
@@ -20,7 +24,9 @@ namespace RunnerApp
             health = 100;
             score = 0;
             stairs = false;
-  
+
+            var soundBuffer = new SoundBuffer(Resources.take_lamp);
+            sound.SoundBuffer = soundBuffer;
         }
 
         private void Control()
@@ -129,8 +135,9 @@ namespace RunnerApp
                         sb[j] = ' ';
                         string str = sb.ToString();
                         Map.baseMap[i] = str;
-
+                       
                         score += 20;
+                        sound.Play();
                     }
         }
 

@@ -89,5 +89,15 @@ namespace RunnerApp.Properties {
                 return ((byte[])(obj));
             }
         }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
+        internal static byte[] take_lamp {
+            get {
+                object obj = ResourceManager.GetObject("take_lamp", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }
