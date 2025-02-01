@@ -151,7 +151,6 @@ namespace RunnerApp
 
         private void ThrowChain(double x, double y)
         {
-
             if (Map.chainCount == 0)
                 return;
 
@@ -160,6 +159,9 @@ namespace RunnerApp
 
             if (Map.baseMap[i][j] == ' ' && !isSpacePressed)
             {
+                if (Map.baseMap[i - 1][j] != 'c')
+                    --Map.chainCount;
+
                 while (Map.baseMap[i - 1][j] != 'b'
                     && Map.baseMap[i - 1][j] != 'l')
                 {
@@ -169,8 +171,6 @@ namespace RunnerApp
                     string str = sb.ToString();
                     Map.baseMap[i] = str;
                 }
-                --Map.chainCount;
-
             }
         }
 
@@ -213,7 +213,7 @@ namespace RunnerApp
         private void DisplayСoordinates()
         {
             Console.SetCursorPosition(0, 0);
-            Console.Write($"Player coordinates \nX: {x:f2}, Y: {y:f2}");
+            Console.Write($"Player coordinates \nX: {x:f2}, Y: {y:f2}, {Map.chainCount}");
             Console.CursorVisible = false;
         }
     }
