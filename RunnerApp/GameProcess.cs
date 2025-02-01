@@ -1,5 +1,4 @@
 ﻿using RunnerApp.Properties;
-using SFML.Audio;
 using SFML.Graphics;
 using SFML.System;
 

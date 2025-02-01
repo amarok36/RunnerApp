@@ -9,13 +9,13 @@ namespace RunnerApp
     public class Player : Entity
     {
         enum State { left, right, up, down, stay };
-        State state;  
+        State state;
         double currentFrame;
         public int score;
         bool stairs;
 
         Sound sound = new Sound();
-        
+
         public Player(Image image, double x, double y) : base(image, x, y)
         {
             sprite.TextureRect = new IntRect(0, 0, width, height);
@@ -50,6 +50,10 @@ namespace RunnerApp
             {
                 state = State.down;
                 speed = 0.1;
+            }
+            if (Keyboard.IsKeyPressed(Keyboard.Key.Space))
+            {
+                ThrowChain(x, y);
             }
         }
 
@@ -135,10 +139,28 @@ namespace RunnerApp
                         sb[j] = ' ';
                         string str = sb.ToString();
                         Map.baseMap[i] = str;
-                       
+
                         score += 20;
                         sound.Play();
                     }
+        }
+
+        private void ThrowChain(double x, double y)
+        {
+            int i = (int)y / 32;
+            int j = (int)x / 32;
+
+            if (Map.baseMap[i][j] == ' ')
+            {
+                while (Map.baseMap[i - 1][j] != 'b')
+                {
+                    --i;
+                    StringBuilder sb = new StringBuilder(Map.baseMap[i]);
+                    sb[j] = 'c';
+                    string str = sb.ToString();
+                    Map.baseMap[i] = str;
+                }
+            }
         }
 
         public void Update(double time)
