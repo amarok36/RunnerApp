@@ -17,5 +17,4 @@ namespace RunnerApp
             text.Position = textPosition;
         }
     }
-
 }

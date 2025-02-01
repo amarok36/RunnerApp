@@ -14,6 +14,8 @@ namespace RunnerApp
         public int score;
         bool stairs;
 
+        bool isSpacePressed = false;
+
         Sound sound = new Sound();
 
         public Player(Image image, double x, double y) : base(image, x, y)
@@ -54,7 +56,9 @@ namespace RunnerApp
             if (Keyboard.IsKeyPressed(Keyboard.Key.Space))
             {
                 ThrowChain(x, y);
+                isSpacePressed = true;
             }
+            else isSpacePressed = false;
         }
 
         public void Animate(double time)
@@ -147,12 +151,17 @@ namespace RunnerApp
 
         private void ThrowChain(double x, double y)
         {
+
+            if (Map.chainCount == 0)
+                return;
+
             int i = (int)y / 32;
             int j = (int)x / 32;
 
-            if (Map.baseMap[i][j] == ' ')
+            if (Map.baseMap[i][j] == ' ' && !isSpacePressed)
             {
-                while (Map.baseMap[i - 1][j] != 'b')
+                while (Map.baseMap[i - 1][j] != 'b'
+                    && Map.baseMap[i - 1][j] != 'l')
                 {
                     --i;
                     StringBuilder sb = new StringBuilder(Map.baseMap[i]);
@@ -160,6 +169,8 @@ namespace RunnerApp
                     string str = sb.ToString();
                     Map.baseMap[i] = str;
                 }
+                --Map.chainCount;
+
             }
         }
 
