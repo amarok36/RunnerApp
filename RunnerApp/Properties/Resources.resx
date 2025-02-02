@@ -130,4 +130,7 @@
   <data name="take_lamp" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\sounds\take_lamp.ogg;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="throw_chain" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\sounds\throw_chain.ogg;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>
