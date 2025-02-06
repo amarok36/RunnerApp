@@ -1,6 +1,4 @@
-﻿using RunnerApp.Properties;
-using SFML.Audio;
-using SFML.Graphics;
+﻿using SFML.Graphics;
 using SFML.Window;
 using System.Text;
 
@@ -16,8 +14,8 @@ namespace RunnerApp
 
         bool isSpacePressed = false;
 
-        Sound takeLamp = new Sound();
-        Sound throwChain = new Sound();
+        public event EventHandler? TakingLampEvent;
+        public event EventHandler? ThrowingChainEvent;
 
         public Player(Image image, double x, double y) : base(image, x, y)
         {
@@ -27,11 +25,6 @@ namespace RunnerApp
             health = 100;
             score = 0;
             stairs = false;
-
-            SoundBuffer lampBuffer = new SoundBuffer(Resources.take_lamp);
-            takeLamp.SoundBuffer = lampBuffer;
-            SoundBuffer chainBuffer = new SoundBuffer(Resources.throw_chain);
-            throwChain.SoundBuffer = chainBuffer;
         }
 
         private void Control()
@@ -90,7 +83,7 @@ namespace RunnerApp
         {
             if (dY < 0)
                 for (int i = (int)y / 32; i < (y + height) / 32; i++)
-                    for (int j = (int)(x + 10) / 32; j < (x + 5) / 32; j++)
+                    for (int j = (int)(x + 5) / 32; j < (x + 5) / 32; j++)
                         if (Map.baseMap[i][j] == 'b')
                         { y = i * 32 + 32; dy = 0; }
 
@@ -119,7 +112,7 @@ namespace RunnerApp
             for (int i = (int)y / 32; i < (y + height) / 32; i++)
                 for (int j = (int)x / 32; j < (x + 17) / 32; j++)
                 {
-                    if (Map.baseMap[i][j] == 's')
+                    if (Map.baseMap[i][j] == 's' || Map.baseMap[i - 1][j] == 'c')
                     {
                         stairs = true;
                         onGround = false;
@@ -148,7 +141,7 @@ namespace RunnerApp
                         Map.baseMap[i] = str;
 
                         score += 20;
-                        takeLamp.Play();
+                        TakingLampEvent(this, null);
                     }
         }
 
@@ -162,10 +155,11 @@ namespace RunnerApp
 
             if (Map.baseMap[i][j] == ' ' && !isSpacePressed)
             {
-                if (Map.baseMap[i - 1][j] != 'c')
+                if (Map.baseMap[i - 1][j] != 'c'
+                 && Map.baseMap[i - 1][j] != 'l')
                 {
                     --Map.chainCount;
-                    throwChain.Play();
+                    ThrowingChainEvent(this, null);
                 }
 
                 while (Map.baseMap[i - 1][j] != 'b'
