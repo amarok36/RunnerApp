@@ -1,6 +1,4 @@
-﻿using RunnerApp.Properties;
-using SFML.Audio;
-using SFML.Graphics;
+﻿using SFML.Graphics;
 using SFML.Window;
 using System.Text;
 
@@ -9,13 +7,16 @@ namespace RunnerApp
     public class Player : Entity
     {
         enum State { left, right, up, down, stay };
-        State state;  
+        State state;
         double currentFrame;
         public int score;
         bool stairs;
 
-        Sound sound = new Sound();
-        
+        bool isSpacePressed = false;
+
+        public event EventHandler? TakingLampEvent;
+        public event EventHandler? ThrowingChainEvent;
+
         public Player(Image image, double x, double y) : base(image, x, y)
         {
             sprite.TextureRect = new IntRect(0, 0, width, height);
@@ -24,9 +25,6 @@ namespace RunnerApp
             health = 100;
             score = 0;
             stairs = false;
-
-            var soundBuffer = new SoundBuffer(Resources.take_lamp);
-            sound.SoundBuffer = soundBuffer;
         }
 
         private void Control()
@@ -51,6 +49,12 @@ namespace RunnerApp
                 state = State.down;
                 speed = 0.1;
             }
+            if (Keyboard.IsKeyPressed(Keyboard.Key.Space))
+            {
+                ThrowChain(x, y);
+                isSpacePressed = true;
+            }
+            else isSpacePressed = false;
         }
 
         public void Animate(double time)
@@ -79,7 +83,7 @@ namespace RunnerApp
         {
             if (dY < 0)
                 for (int i = (int)y / 32; i < (y + height) / 32; i++)
-                    for (int j = (int)(x + 10) / 32; j < (x + 5) / 32; j++)
+                    for (int j = (int)(x + 5) / 32; j < (x + 5) / 32; j++)
                         if (Map.baseMap[i][j] == 'b')
                         { y = i * 32 + 32; dy = 0; }
 
@@ -108,7 +112,7 @@ namespace RunnerApp
             for (int i = (int)y / 32; i < (y + height) / 32; i++)
                 for (int j = (int)x / 32; j < (x + 17) / 32; j++)
                 {
-                    if (Map.baseMap[i][j] == 's')
+                    if (Map.baseMap[i][j] == 's' || Map.baseMap[i - 1][j] == 'c')
                     {
                         stairs = true;
                         onGround = false;
@@ -135,10 +139,39 @@ namespace RunnerApp
                         sb[j] = ' ';
                         string str = sb.ToString();
                         Map.baseMap[i] = str;
-                       
+
                         score += 20;
-                        sound.Play();
+                        TakingLampEvent(this, null);
                     }
+        }
+
+        private void ThrowChain(double x, double y)
+        {
+            if (Map.chainCount == 0)
+                return;
+
+            int i = (int)y / 32;
+            int j = (int)x / 32;
+
+            if (Map.baseMap[i][j] == ' ' && !isSpacePressed)
+            {
+                if (Map.baseMap[i - 1][j] != 'c'
+                 && Map.baseMap[i - 1][j] != 'l')
+                {
+                    --Map.chainCount;
+                    ThrowingChainEvent(this, null);
+                }
+
+                while (Map.baseMap[i - 1][j] != 'b'
+                    && Map.baseMap[i - 1][j] != 'l')
+                {
+                    --i;
+                    StringBuilder sb = new StringBuilder(Map.baseMap[i]);
+                    sb[j] = 'c';
+                    string str = sb.ToString();
+                    Map.baseMap[i] = str;
+                }
+            }
         }
 
         public void Update(double time)

@@ -1,6 +1,5 @@
 ﻿using SFML.Graphics;
 using SFML.System;
-using SFML.Window;
 
 namespace RunnerApp
 {
@@ -18,5 +17,4 @@ namespace RunnerApp
             text.Position = textPosition;
         }
     }
-
 }

@@ -26,6 +26,7 @@ namespace RunnerApp
                     if (Map.baseMap[i][j] == 'b') Map.mapSprite.TextureRect = new IntRect(32, 0, 32, 32); // brick
                     if (Map.baseMap[i][j] == 's') Map.mapSprite.TextureRect = new IntRect(64, 0, 32, 32); // stairs
                     if (Map.baseMap[i][j] == 'l') Map.mapSprite.TextureRect = new IntRect(96, 0, 32, 32);  // lamp
+                    if (Map.baseMap[i][j] == 'c') Map.mapSprite.TextureRect = new IntRect(128, 0, 32, 32);  // chain
 
                     Map.mapSprite.Position = new(j * 32, i * 32);
 
@@ -42,8 +43,8 @@ namespace RunnerApp
 
             gameParameters = new TextInformation(Resources.Dynastium, parameters, textPosition);
 
-            base.Draw(gameParameters.text); 
-         }
+            base.Draw(gameParameters.text);
+        }
 
         private void Window_Closed(object sender, EventArgs e)
         {

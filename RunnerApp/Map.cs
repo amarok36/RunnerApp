@@ -39,6 +39,8 @@ namespace RunnerApp
             "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
         ];
 
+        public static int chainCount = 5;
+
         public static void RandomLampsGenerate()
         {
             int countLamp = 5;
@@ -63,7 +65,6 @@ namespace RunnerApp
                     countLamp--;
                 }
             }
-
         }
     }
 }
