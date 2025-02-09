@@ -92,7 +92,7 @@ namespace RunnerApp
                 for (int i = (int)y / 32; i < (y + height) / 32; i++)
                     for (int j = (int)(x + 10) / 32; j < (x + 20) / 32; j++)
                         if (Map.baseMap[i][j] == 'b')
-                        { y = i * 32 - 32; dy = 0; onGround = true; }
+                        { y = i * 32 - 32; dy = 0; }
 
 
             if (dX < 0)
