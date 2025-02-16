@@ -21,10 +21,10 @@ namespace RunnerApp
 
         public Color backgroundColor = new Color(3, 0, 32);
 
-        public Entity(Image image, double x, double y)
+        public Entity(Image image, (double x, double y) coordinates)
         {
-            this.x = x;
-            this.y = y;
+            x = coordinates.x;
+            y = coordinates.y;
 
             width = 32;
             height = 32;
@@ -41,6 +41,15 @@ namespace RunnerApp
             texture = new Texture(image);
             sprite = new Sprite(texture);
             sprite.Origin = new Vector2f(width / 2, height / 2);
+        }
+
+        public virtual void Update(double time)
+        {
+            x += dx * time;
+            y += dy * time;
+            dy = dy + 0.0015 * time;
+
+            sprite.Position = new((float)x + width / 2, (float)y + height / 2);
         }
     }
 }
