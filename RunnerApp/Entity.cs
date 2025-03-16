@@ -6,6 +6,8 @@ namespace RunnerApp
     // base class
     public class Entity
     {
+        public double currentFrame;
+
         public double x, y;
         public double dx, dy;
         public double speed;
@@ -23,6 +25,8 @@ namespace RunnerApp
 
         public Entity(Image image, (double x, double y) coordinates)
         {
+            currentFrame = 0;
+
             x = coordinates.x;
             y = coordinates.y;
 

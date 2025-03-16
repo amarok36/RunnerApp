@@ -14,7 +14,7 @@ namespace RunnerApp
         private Sound takeLamp = new Sound();
         private Sound throwChain = new Sound();
 
-        GreenEnemy[] greenEnemy = new GreenEnemy[3];
+        GreenEnemy[] greenEnemies = new GreenEnemy[3];
 
         private Clock clock = new Clock();
         private double time;
@@ -47,9 +47,9 @@ namespace RunnerApp
 
         private void GenerateGreenEnemies(Image image)
         {
-            for (int i = 0; i < greenEnemy.Length; i++)
+            for (int i = 0; i < greenEnemies.Length; i++)
             {
-                greenEnemy[i] = new GreenEnemy(image, GetRandomCoordinates());
+                greenEnemies[i] = new GreenEnemy(image, GetRandomCoordinates());
             }
         }
 
@@ -57,15 +57,18 @@ namespace RunnerApp
         {
             int coordX = 0;
             int coordY = 0;
+            int rndValue;
 
             bool done = false;
 
             while (done == false)
             {
                 Random rnd = new Random();
-                int rndValue = rnd.Next();
 
+                rndValue = rnd.Next();
                 coordX = 1 + rndValue % (Map.MapWidth - 1);
+
+                rndValue = rnd.Next();
                 coordY = 1 + rndValue % (Map.MapHeight - 1);
 
                 if (Map.baseMap[coordY][coordX] == ' ' || Map.baseMap[coordY][coordX] == 's')
@@ -97,8 +100,9 @@ namespace RunnerApp
                 window2D.Draw(player.sprite);
                 player.Update(time);
 
-                foreach (var enemy in greenEnemy)
+                foreach (var enemy in greenEnemies)
                 {
+                    enemy.Animate(time);
                     window2D.Draw(enemy.sprite);
                     enemy.Update(time);
                 }

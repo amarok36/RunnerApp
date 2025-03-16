@@ -8,7 +8,6 @@ namespace RunnerApp
     {
         enum State { left, right, up, down, stay };
         State state;
-        double currentFrame;
         public int score;
         bool stairs;
 
@@ -21,7 +20,6 @@ namespace RunnerApp
         {
             sprite.TextureRect = new IntRect(0, 0, width, height);
             state = State.stay;
-            currentFrame = 0;
             health = 100;
             score = 0;
             stairs = false;
