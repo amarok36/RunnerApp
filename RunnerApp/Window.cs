@@ -11,7 +11,6 @@ namespace RunnerApp
 
         public Window() : base(new VideoMode(1366, 768, 24), "RunnerApp", Styles.Close)
         {
-            // frame rate limit to stabilize rendering speed
             base.SetFramerateLimit(80);
 
             Closed += Window_Closed!;

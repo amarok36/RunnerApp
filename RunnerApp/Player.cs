@@ -8,7 +8,6 @@ namespace RunnerApp
     {
         enum State { left, right, up, down, stay };
         State state;
-        double currentFrame;
         public int score;
         bool stairs;
 
@@ -17,11 +16,10 @@ namespace RunnerApp
         public event EventHandler? TakingLampEvent;
         public event EventHandler? ThrowingChainEvent;
 
-        public Player(Image image, double x, double y) : base(image, x, y)
+        public Player(Image image, (double x, double y) coordinates) : base(image, coordinates)
         {
             sprite.TextureRect = new IntRect(0, 0, width, height);
             state = State.stay;
-            currentFrame = 0;
             health = 100;
             score = 0;
             stairs = false;
@@ -92,7 +90,7 @@ namespace RunnerApp
                 for (int i = (int)y / 32; i < (y + height) / 32; i++)
                     for (int j = (int)(x + 10) / 32; j < (x + 20) / 32; j++)
                         if (Map.baseMap[i][j] == 'b')
-                        { y = i * 32 - 32; dy = 0; }
+                        { y = i * 32 - 32; dy = 0; onGround = true; }
 
 
             if (dX < 0)
@@ -174,7 +172,7 @@ namespace RunnerApp
             }
         }
 
-        public void Update(double time)
+        public override void Update(double time)
         {
             Control();
 
