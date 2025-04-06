@@ -4,7 +4,7 @@ using SFML.System;
 namespace RunnerApp
 {
     // base class
-    public class Entity
+    public class Entity : Sprite
     {
         public double currentFrame;
 

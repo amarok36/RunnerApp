@@ -56,6 +56,11 @@ namespace RunnerApp.Enemies
                         if (Map.baseMap[i][j] == 'b')
                         { x = j * 32 - 32; dx = -0.07; }
         }
+        public void StopMove()
+        {
+            dx = 0;
+            dy = 0;
+        }
 
         public override void Update(double time)
         {
@@ -70,7 +75,7 @@ namespace RunnerApp.Enemies
             if (health <= 0) life = false;
             if (!isMove) speed = 0;
 
-            dy = dy + 0.0015 * time;
+            dy = dy + 0.0015 * time; // gravity
 
             if (dx < 0) sprite.TextureRect = new IntRect(0, 0, 32, 32);
             if (dx > 0) sprite.TextureRect = new IntRect(0, 32, 32, 32);

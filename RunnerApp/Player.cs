@@ -1,4 +1,5 @@
-﻿using SFML.Graphics;
+﻿using RunnerApp.Enemies;
+using SFML.Graphics;
 using SFML.Window;
 using System.Text;
 
@@ -15,6 +16,7 @@ namespace RunnerApp
 
         public event EventHandler? TakingLampEvent;
         public event EventHandler? ThrowingChainEvent;
+        public event EventHandler? СollideEnemyEvent;
 
         public Player(Image image, (double x, double y) coordinates) : base(image, coordinates)
         {
@@ -27,6 +29,8 @@ namespace RunnerApp
 
         private void Control()
         {
+            if (!life) return;
+
             if (Keyboard.IsKeyPressed(Keyboard.Key.Left))
             {
                 state = State.left;
@@ -57,6 +61,8 @@ namespace RunnerApp
 
         public void Animate(double time)
         {
+            if (!life) return;
+
             if (Keyboard.IsKeyPressed(Keyboard.Key.Left))
             {
                 currentFrame += 0.01 * time;
@@ -138,9 +144,38 @@ namespace RunnerApp
                         string str = sb.ToString();
                         Map.baseMap[i] = str;
 
-                        score += 20;
+                        score += 10;
                         TakingLampEvent(this, null);
                     }
+        }
+
+        public void CollisionsWithGreenEnemies(GreenEnemy[] greenEnemies)
+        {
+            for (int i = 0; i < greenEnemies.Length; i++)
+            {
+                if (sprite.GetGlobalBounds().Intersects(greenEnemies[i].sprite.GetGlobalBounds()))
+                {
+                    if (greenEnemies[i].x <= x)
+                        x = greenEnemies[i].x + 32;
+                    else
+                        x = greenEnemies[i].x - 32;
+
+
+                    if ((x - greenEnemies[i].x) < 32 && dx < 0)
+                    {
+                        greenEnemies[i].x = x - 32;
+                    }
+
+                    if ((greenEnemies[i].x - x) < 32 && dx > 0)
+                    {
+                        greenEnemies[i].x = x + 32;
+                    }
+
+                    СollideEnemyEvent(this, null);
+                    health -= 5;
+                    greenEnemies[i].dx *= -1;
+                }
+            }
         }
 
         private void ThrowChain(double x, double y)
@@ -172,6 +207,19 @@ namespace RunnerApp
             }
         }
 
+        public int GetHealth()
+        {
+            if (health < 0)
+                health = 0;
+
+            return health;
+        }
+
+        public int GetScore()
+        {
+            return score;
+        }
+
         public override void Update(double time)
         {
             Control();
@@ -195,7 +243,7 @@ namespace RunnerApp
 
             sprite.Position = new((float)x + width / 2, (float)y + height / 2);
 
-            if (health <= 0) life = false;
+            if (health == 0) life = false;
             if (!isMove) speed = 0;
 
             if (onGround) dy = dy + 0.0015 * time; // gravity

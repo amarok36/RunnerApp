@@ -103,6 +103,16 @@ namespace RunnerApp.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Byte[].
         /// </summary>
+        internal static byte[] player_damage {
+            get {
+                object obj = ResourceManager.GetObject("player_damage", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
         internal static byte[] take_lamp {
             get {
                 object obj = ResourceManager.GetObject("take_lamp", resourceCulture);

@@ -11,13 +11,17 @@ namespace RunnerApp
         private Window window2D = new Window();
 
         private Player player = new Player(new Image(Resources.player), (650, 600));
-        private Sound takeLamp = new Sound();
-        private Sound throwChain = new Sound();
 
-        GreenEnemy[] greenEnemies = new GreenEnemy[3];
+        GreenEnemy[] greenEnemies = new GreenEnemy[5];
 
         private Clock clock = new Clock();
         private double time;
+
+        private Sound takeLamp = new Sound();
+        private Sound throwChain = new Sound();
+        private Sound collisionEnemy = new Sound();
+
+        TextInformation? gameStatus;
 
         public GameProcess()
         {
@@ -25,12 +29,16 @@ namespace RunnerApp
 
             player.TakingLampEvent += Taking_LampEvent;
             player.ThrowingChainEvent += Throwing_ChainEvent;
+            player.СollideEnemyEvent += Сollide_EnemyEventEvent;
 
             SoundBuffer lampBuffer = new SoundBuffer(Resources.take_lamp);
             takeLamp.SoundBuffer = lampBuffer;
 
             SoundBuffer chainBuffer = new SoundBuffer(Resources.throw_chain);
             throwChain.SoundBuffer = chainBuffer;
+
+            SoundBuffer collisonBuffer = new SoundBuffer(Resources.player_damage);
+            collisionEnemy.SoundBuffer = collisonBuffer;
 
             GenerateGreenEnemies(new Image(Resources.greenEnemy));
         }
@@ -45,12 +53,9 @@ namespace RunnerApp
             throwChain.Play();
         }
 
-        private void GenerateGreenEnemies(Image image)
+        private void Сollide_EnemyEventEvent(object? sender, EventArgs e)
         {
-            for (int i = 0; i < greenEnemies.Length; i++)
-            {
-                greenEnemies[i] = new GreenEnemy(image, GetRandomCoordinates());
-            }
+            collisionEnemy.Play();
         }
 
         private (double, double) GetRandomCoordinates()
@@ -82,6 +87,14 @@ namespace RunnerApp
             return (coordX, coordY);
         }
 
+        private void GenerateGreenEnemies(Image image)
+        {
+            for (int i = 0; i < greenEnemies.Length; i++)
+            {
+                greenEnemies[i] = new GreenEnemy(image, GetRandomCoordinates());
+            }
+        }
+
         public void Run()
         {
             while (window2D.IsOpen)
@@ -94,7 +107,7 @@ namespace RunnerApp
                 window2D.Clear();
 
                 window2D.DrawMap();
-                window2D.DrawText(player.score, player.health);
+                window2D.DrawText(player.GetScore(), player.GetHealth());
 
                 player.Animate(time);
                 window2D.Draw(player.sprite);
@@ -107,8 +120,29 @@ namespace RunnerApp
                     enemy.Update(time);
                 }
 
+                player.CollisionsWithGreenEnemies(greenEnemies);
+
+                if (!player.life)
+                    GameOver();
+
                 window2D.Display();
             }
+        }
+
+        private void GameOver()
+        {
+            string gameOverText = "GAME OVER";
+            Vector2f textPosition = new(620, 320);
+
+            gameStatus = new TextInformation(gameOverText, textPosition);
+
+            for (int i = 0; i < greenEnemies.Length; i++)
+            {
+                greenEnemies[i].StopMove();
+            }
+
+            window2D.Clear();
+            window2D.Draw(gameStatus.text);
         }
     }
 }

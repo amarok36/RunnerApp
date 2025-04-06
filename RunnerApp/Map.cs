@@ -39,11 +39,11 @@ namespace RunnerApp
             "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
         ];
 
-        public static int chainCount = 5;
+        public static int chainCount = 10;
 
         public static void RandomLampsGenerate()
         {
-            int countLamp = 5;
+            int countLamp = 10;
 
             while (countLamp > 0)
             {

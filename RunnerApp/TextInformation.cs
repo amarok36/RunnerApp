@@ -1,4 +1,5 @@
-﻿using SFML.Graphics;
+﻿using RunnerApp.Properties;
+using SFML.Graphics;
 using SFML.System;
 
 namespace RunnerApp
@@ -8,9 +9,9 @@ namespace RunnerApp
         private Font font;
         public Text text;
 
-        public TextInformation(byte[] textFont, string textString, Vector2f textPosition)
+        public TextInformation(string textString, Vector2f textPosition)
         {
-            font = new Font(textFont);
+            font = new Font(Resources.Dynastium);
             text = new Text(textString, font, 20);
 
             text.FillColor = new Color(243, 139, 15);
