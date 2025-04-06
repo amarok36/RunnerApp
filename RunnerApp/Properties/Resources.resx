@@ -130,6 +130,9 @@
   <data name="player" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\tiles\player.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="player_damage" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\player_damage.ogg;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="take_lamp" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\sounds\take_lamp.ogg;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>

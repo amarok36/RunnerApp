@@ -1,5 +1,4 @@
-﻿using RunnerApp.Properties;
-using SFML.Graphics;
+﻿using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
 
@@ -40,7 +39,7 @@ namespace RunnerApp
             string parameters = string.Join("\t", playerScore, playerHealth);
             Vector2f textPosition = new(15, 723);
 
-            gameParameters = new TextInformation(Resources.Dynastium, parameters, textPosition);
+            gameParameters = new TextInformation(parameters, textPosition);
 
             base.Draw(gameParameters.text);
         }
